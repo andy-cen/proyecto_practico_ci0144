@@ -1,0 +1,100 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+
+    set lan_ifaces {
+        type ifname
+        elements = { "ens36.100", "ens36.101", "ens36.102", "ens36.103",
+                      "ens36.104", "ens36.105", "ens36.106", "ens36.107", "ens36.108" }
+    }
+
+    # AJUSTA esto con la IP/rango real de tu VPN una vez la confirmes.
+    set wan_ssh_allow {
+        type ipv4_addr
+        flags interval
+        elements = { 172.17.0.112 }   # <-- reemplazar por el rango/IP real
+    }
+
+    chain input {
+        type filter hook input priority 0; policy drop;
+
+        iif "lo" accept
+        ct state established,related accept
+        ct state invalid drop
+
+        iifname "ens37" icmp type { echo-request, destination-unreachable, time-exceeded } accept
+        iifname @lan_ifaces icmp type { echo-request, destination-unreachable, time-exceeded } accept
+        ip protocol icmp icmp type echo-reply accept
+        iifname "ens33" ip saddr 172.24.133.80 udp dport { 500, 4500 } accept
+        iifname "ens33" ip saddr 172.24.133.80 ip protocol esp accept
+        # ICMP proveniente de CAR a traves del tunel IPsec
+        iifname "ens33" ip saddr 10.4.32.0/20 ip daddr 10.4.0.0/20 icmp type echo-request accept
+
+	iifname "ens33" ip saddr 10.4.16.0/20 icmp type { echo-request, echo-reply, destination-unreachable, time-exceeded } accept
+	
+        # SSH desde VLAN de gestión interna (ruta normal según rúbrica)
+        iifname "ens36.100" tcp dport 22 ct state new accept
+
+        # SSH desde gestión NAC out-of-band (queda listo por si la VPN se arregla)
+        iifname "ens37" tcp dport 22 ct state new accept
+
+        # SSH desde WAN (excepción operativa): solo IPs permitidas + rate limit anti fuerza bruta
+        iifname "ens33" ip saddr @wan_ssh_allow tcp dport 22 ct state new \
+            limit rate 4/minute burst 4 packets accept
+
+	iifname "ens33" ip saddr 172.24.133.84 ip protocol esp accept
+
+        limit rate 5/minute log prefix "INPUT-DROP: " level info
+        drop
+    }
+
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+
+        ct state established,related accept
+        ct state invalid drop
+
+        iifname @lan_ifaces oifname "ens33" accept
+        iifname @lan_ifaces oifname @lan_ifaces accept
+        iifname @lan_ifaces oifname "ens33" ip daddr 10.4.16.0/20 accept
+        iifname "ens33" oifname @lan_ifaces ip saddr 10.4.16.0/20 accept
+
+	# Tráfico hacia car a través del túnel
+	iifname @lan_ifaces oifname "ens33" ip daddr 10.4.32.0/20 accept
+	# Tráfico desde car a través del túnel
+	iifname "ens33" oifname @lan_ifaces ip saddr 10.4.32.0/20 accept
+
+        limit rate 5/minute log prefix "FORWARD-DROP: " level info
+        drop
+    }
+
+    chain output {
+        type filter hook output priority 0; policy drop;
+
+        oif "lo" accept
+        oifname "ens33" ip daddr 172.24.133.80 udp dport { 500, 4500 } accept
+        oifname "ens33" ip daddr 172.24.133.80 ip protocol esp accept
+        ct state established,related accept
+
+        udp dport 53 accept
+        tcp dport 53 accept
+        udp dport 123 accept
+        tcp dport { 80, 443 } accept
+        tcp dport 22 accept
+        icmp type { echo-request, echo-reply, destination-unreachable, time-exceeded } accept
+
+	oifname "ens33" ip daddr 172.24.133.84 ip protocol esp accept
+
+        limit rate 5/minute log prefix "OUTPUT-DROP: " level info
+        drop
+    }
+}
+
+table ip nat {
+    chain postrouting {
+        type nat hook postrouting priority 100; policy accept;
+        ip saddr 10.4.0.0/20 ip daddr != { 10.4.32.0/20, 10.4.16.0/20 } oifname "ens33" snat to 172.24.133.76
+    }
+}
