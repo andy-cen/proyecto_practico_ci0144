@@ -10,11 +10,10 @@ table inet filter {
                       "ens36.104", "ens36.105", "ens36.106", "ens36.107", "ens36.108" }
     }
 
-    # AJUSTA esto con la IP/rango real de tu VPN una vez la confirmes.
     set wan_ssh_allow {
         type ipv4_addr
         flags interval
-        elements = { 172.17.0.112 }   # <-- reemplazar por el rango/IP real
+        elements = { 172.17.0.112 }
     }
 
     chain input {
