@@ -66,6 +66,7 @@ Además de las evidencias almacenadas por sede, la Etapa 1 contiene recursos gen
 
 - [Capturas generales](./etapa_1/capturas/)
 - [Anexo 2](./etapa_1/capturas/anexo_2/)
+- [Documentos](./etapa_1/docs/)
 - [Figuras](./etapa_1/figuras/)
 
 ---
@@ -93,6 +94,7 @@ proyecto_practico_ci0144/
     │   ├── ipsec/
     │   ├── network/
     │   └── ssh/
+    ├── figuras/
     ├── figuras/
     ├── limón/
     │   ├── capturas/
