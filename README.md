@@ -94,7 +94,7 @@ proyecto_practico_ci0144/
     │   ├── ipsec/
     │   ├── network/
     │   └── ssh/
-    ├── figuras/
+    ├── docs/
     ├── figuras/
     ├── limón/
     │   ├── capturas/
@@ -118,5 +118,5 @@ Cada sede mantiene sus configuraciones y evidencias organizadas de forma indepen
 
 ---
 
-**CI-0144 – Diseño y Operación de Servicios de Infraestructura**  
+**CI-0144 - Diseño y Operación de Servicios de Infraestructura**  
 **Universidad de Costa Rica - II Semestre, 2026**
