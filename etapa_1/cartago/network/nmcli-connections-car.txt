@@ -1,0 +1,16 @@
+NAME                    UUID                                  TYPE      DEVICE    
+internet                c0b5b857-84fb-4189-bd40-c9f94cc77ee9  ethernet  ens33     
+vlan100-mgmt            8380ba1b-bb40-475c-80e6-1d05ae16a556  vlan      ens36.100 
+vlan101-infra           497cddf5-86d8-4920-af1f-f8c1afd721e4  vlan      ens36.101 
+vlan102-identidad       6cc36e1a-0f8b-41c4-914e-56481ab48632  vlan      ens36.102 
+vlan103-web             61f2527f-53b1-4d74-8149-6f8af10b7fa7  vlan      ens36.103 
+vlan104-db              21e312bf-4c89-40d3-93d2-625552114ec8  vlan      ens36.104 
+vlan105-uo-admin        83b93e2b-74c7-4ae4-9e29-f211e108dee3  vlan      ens36.105 
+vlan106-uo-operaciones  2bb38466-89bd-466c-9452-ecfe57830754  vlan      ens36.106 
+vlan107-uo-ventas       ed052d7f-5e7a-4958-ba3b-1f5b689d06fe  vlan      ens36.107 
+vlan108-uo-ti           709ff894-00d9-4d88-8128-08b98302fce6  vlan      ens36.108 
+nac-mgmt                e41bb52a-4868-44ec-8c14-3d5d86b0a19e  ethernet  ens37     
+lan-trunk               9d4fb617-cfe2-49f1-b02e-8df8dcdda60c  ethernet  ens36     
+lo                      d5a64591-9873-4321-a81b-dffd35c1ce42  loopback  lo        
+internet                227eaffd-890d-4803-9cde-6dd07f0aa438  ethernet  --        
+Wired connection 1      b184c1d3-430e-3938-955a-25604616678b  ethernet  --        
