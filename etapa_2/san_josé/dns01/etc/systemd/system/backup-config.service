@@ -1,0 +1,9 @@
+[Unit]
+Description=Respaldo de configuraciones DNS SJO hacia LIM
+Wants=network-online.target
+After=network-online.target named.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/opt/automatizacion/scripts/backup-config.sh

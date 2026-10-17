@@ -1,0 +1,12 @@
+[Unit]
+Description=CI-0144 - Temporizador de despliegue de zona DNS
+
+[Timer]
+OnBootSec=1min
+OnUnitInactiveSec=5min
+AccuracySec=1min
+Persistent=true
+Unit=dns-zone-deploy.service
+
+[Install]
+WantedBy=timers.target

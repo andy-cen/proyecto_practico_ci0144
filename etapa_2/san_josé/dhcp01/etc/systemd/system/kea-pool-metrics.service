@@ -1,0 +1,9 @@
+[Unit]
+Description=Actualizar metricas de pools DHCP Kea
+After=kea-dhcp4.service
+Requires=kea-dhcp4.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/kea_pool_metrics.py

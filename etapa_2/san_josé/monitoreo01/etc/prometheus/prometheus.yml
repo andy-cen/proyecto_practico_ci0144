@@ -1,0 +1,173 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    estudiante: 'C31426'
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['127.0.0.1:9090']
+
+  - job_name: nodos
+    static_configs:
+      - targets: ['127.0.0.1:9100']
+        labels:
+          instance: 'monitoreo01.sjo'
+          sede: 'SJO'
+          grupo: 'g04'
+
+      - targets: ['10.4.1.10:9100']
+        labels:
+          instance: 'dhcp01.sjo'
+          sede: 'SJO'
+          grupo: 'g04'
+
+      - targets: ['10.4.1.20:9100']
+        labels:
+          instance: 'dns01.sjo'
+          sede: 'SJO'
+          grupo: 'g04'
+
+      - targets: ['10.4.1.21:9100']
+        labels:
+          instance: 'resolver01.sjo'
+          sede: 'SJO'
+          grupo: 'g04'
+
+      - targets: ['10.4.17.10:9100']
+        labels:
+          instance: 'dhcp01.lim'
+          sede: 'LIM'
+          grupo: 'g04'
+
+      - targets: ['10.4.19.20:9100']
+        labels:
+          instance: 'dns01.lim'
+          sede: 'LIM'
+          grupo: 'g04'
+
+      - targets: ['10.4.1.1:9100']
+        labels:
+          instance: 'firewall01.sjo'
+          sede: 'SJO'
+          grupo: 'g04'
+
+      - targets: ['10.4.17.1:9100']
+        labels:
+          instance: 'firewall01.lim'
+          sede: 'LIM'
+          grupo: 'g04'
+
+      - targets: ['10.4.35.20:9100']
+        labels:
+          instance: 'dns01.car'
+          sede: 'CAR'
+          grupo: 'g04'
+
+      - targets: ['10.4.33.10:9100']
+        labels:
+          instance: 'dhcp01.car'
+          sede: 'CAR'
+          grupo: 'g04'
+
+      - targets: ['10.4.32.1:9100']
+        labels:
+          instance: 'firewall01.car'
+          sede: 'CAR'
+          grupo: 'g04'
+
+  - job_name: servicio_local_http
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets: ['http://127.0.0.1']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115
+
+  - job_name: servicios_tcp
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+          - '10.4.1.21:53'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115
+
+  - job_name: servicios_dns
+    metrics_path: /probe
+    params:
+      module: [dns_proyecto]
+    static_configs:
+      - targets:
+          - '10.4.1.20:53'
+          - '10.4.19.20:53'
+          - '10.4.1.21:53'
+          - '10.4.35.20:53'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115
+
+  - job_name: servicios_dns_externo
+    metrics_path: /probe
+    params:
+      module: [dns_externo]
+    static_configs:
+      - targets:
+          - '10.4.1.21:53'
+        labels:
+          sede: 'SJO'
+          servicio: 'dns_recursivo_externo'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115
+
+  - job_name: servicios_tcp_adicionales
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+          - '10.4.1.10:22'
+          - '10.4.1.20:22'
+          - '10.4.1.21:22'
+          - '10.4.17.10:22'
+          - '10.4.19.20:22'
+          - '10.4.33.10:22'
+          - '10.4.35.20:22'	
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - '127.0.0.1:9093'

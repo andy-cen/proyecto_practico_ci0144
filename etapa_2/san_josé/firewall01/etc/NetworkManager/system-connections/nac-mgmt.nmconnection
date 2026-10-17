@@ -1,0 +1,17 @@
+[connection]
+id=nac-mgmt
+uuid=d78c87ac-5ad0-45bf-8497-f112e8f7a6d3
+type=ethernet
+interface-name=ens37
+
+[ethernet]
+
+[ipv4]
+address1=172.24.5.76/24
+method=manual
+
+[ipv6]
+addr-gen-mode=default
+method=disabled
+
+[proxy]

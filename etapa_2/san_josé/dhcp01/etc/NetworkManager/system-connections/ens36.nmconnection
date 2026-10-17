@@ -1,0 +1,17 @@
+[connection]
+id=ens36
+uuid=805eb093-4822-3cc2-bcbe-82c99a3a205e
+type=ethernet
+autoconnect-priority=-999
+interface-name=ens36
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]

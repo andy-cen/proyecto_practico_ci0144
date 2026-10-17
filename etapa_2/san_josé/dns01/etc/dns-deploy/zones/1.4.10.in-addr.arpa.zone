@@ -1,0 +1,16 @@
+$TTL 3600
+@ IN SOA ns1.g04.ci0144.cr. hostmaster.g04.ci0144.cr. (
+    2026100801 ; Serial
+    3600       ; Refresh
+    900        ; Retry
+    1209600    ; Expire
+    300        ; Negative TTL
+)
+
+@ IN NS ns1.g04.ci0144.cr.
+@ IN NS ns2.g04.ci0144.cr.
+
+20 IN PTR dns01.sjo.int.g04.ci0144.cr.
+21 IN PTR resolver01.sjo.int.g04.ci0144.cr.
+10 IN PTR dhcp01.sjo.int.g04.ci0144.cr.
+50 IN PTR monitoreo01.sjo.int.g04.ci0144.cr.

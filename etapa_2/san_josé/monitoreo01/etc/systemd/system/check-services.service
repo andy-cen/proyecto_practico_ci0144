@@ -1,0 +1,12 @@
+[Unit]
+Description=CI-0144 - Verificacion de servicios DNS y DHCP
+Wants=network-online.target
+After=network-online.target prometheus.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/check_services.sh
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=60

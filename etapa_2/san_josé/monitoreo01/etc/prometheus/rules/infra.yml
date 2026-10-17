@@ -1,0 +1,194 @@
+groups:
+  - name: infraestructura
+    rules:
+
+      # ============================================================
+      # DISPONIBILIDAD DE SERVIDORES
+      # ============================================================
+
+      - alert: InstanciaCaida
+        expr: up{job="nodos"} == 0
+        for: 1m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Servidor caído: {{ $labels.instance }}"
+          description: "El servidor {{ $labels.instance }} de la sede {{ $labels.sede }} no responde a Prometheus desde hace más de 1 minuto."
+
+      # ============================================================
+      # DISPONIBILIDAD DE SERVICIOS
+      # ============================================================
+
+      - alert: ServicioNoDisponible
+        expr: probe_success{job=~"servicios_.*|servicio_local_http"} == 0
+        for: 1m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Servicio no disponible: {{ $labels.instance }}"
+          description: "El servicio monitoreado mediante {{ $labels.job }} no responde. Destino: {{ $labels.instance }}."
+
+      # ============================================================
+      # RECURSOS DEL SISTEMA
+      # ============================================================
+
+      - alert: CPUAlta
+        expr: |
+          100 - (
+            avg by (instance, sede, grupo)
+            (rate(node_cpu_seconds_total{mode="idle"}[5m]))
+            * 100
+          ) > 85
+        for: 5m
+        labels:
+          severity: advertencia
+        annotations:
+          summary: "CPU sobre 85 % en {{ $labels.instance }}"
+          description: "El servidor {{ $labels.instance }} de la sede {{ $labels.sede }} mantiene un uso de CPU superior al 85 % durante más de 5 minutos."
+
+      - alert: MemoriaAlta
+        expr: |
+          (
+            1 - node_memory_MemAvailable_bytes
+            / node_memory_MemTotal_bytes
+          ) * 100 > 90
+        for: 5m
+        labels:
+          severity: advertencia
+        annotations:
+          summary: "Memoria sobre 90 % en {{ $labels.instance }}"
+          description: "El servidor {{ $labels.instance }} de la sede {{ $labels.sede }} utiliza más del 90 % de la memoria disponible durante más de 5 minutos."
+
+      - alert: DiscoCasiLleno
+        expr: |
+          (
+            1 -
+            node_filesystem_avail_bytes{
+              fstype!~"tmpfs|overlay|squashfs"
+            }
+            /
+            node_filesystem_size_bytes{
+              fstype!~"tmpfs|overlay|squashfs"
+            }
+          ) * 100 > 85
+        for: 10m
+        labels:
+          severity: advertencia
+        annotations:
+          summary: "Disco sobre 85 % en {{ $labels.instance }}"
+          description: "El sistema de archivos {{ $labels.mountpoint }} del servidor {{ $labels.instance }} de la sede {{ $labels.sede }} supera el 85 % de utilización."
+
+      # ============================================================
+      # DHCP / KEA
+      # ============================================================
+
+      - alert: DHCPPoolAlto
+        expr: |
+          max by (instance, sede_pool, subnet)
+          (
+            kea_dhcp_pool_utilization_percent{job="nodos"}
+          ) > 80
+        for: 5m
+        labels:
+          severity: advertencia
+        annotations:
+          summary: "Pool DHCP sobre 80 %: {{ $labels.sede_pool }}"
+          description: "El pool DHCP de la sede {{ $labels.sede_pool }}, subred {{ $labels.subnet }}, en {{ $labels.instance }}, presenta una utilización de {{ $value }} % durante más de 5 minutos."
+
+      - alert: DHCPMetricasDesactualizadas
+        expr: |
+          (
+            time()
+            -
+            node_textfile_mtime_seconds{
+              job="nodos",
+              file=~".*kea_pools[.]prom"
+            }
+          ) > 180
+        for: 1m
+        labels:
+          severity: advertencia
+        annotations:
+          summary: "Métricas DHCP desactualizadas en {{ $labels.instance }}"
+          description: "El servidor {{ $labels.instance }} no actualiza las métricas de Kea desde hace más de 3 minutos. Revisar kea-pool-metrics.timer, kea-pool-metrics.service y el Textfile Collector."
+
+      # ============================================================
+      # SERVICIOS SYSTEMD CRITICOS
+      # ============================================================
+
+      - alert: ServicioSystemdCriticoInactivo
+        expr: |
+          node_systemd_unit_state{
+            state="active",
+            name=~"node_exporter.service|kea-dhcp4.service"
+          } == 0
+        for: 1m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Servicio {{ $labels.name }} inactivo en {{ $labels.instance }}"
+          description: "El servicio systemd {{ $labels.name }} se encuentra inactivo en el servidor {{ $labels.instance }}. Revisar el estado del servicio y sus registros."
+
+      - alert: IPsecCaido
+        expr: ipsec_child_installed{job="nodos"} == 0
+        for: 1m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Tunel IPsec caido en {{ $labels.instance }}"
+          description: "El tunel IPsec {{ $labels.tunnel }} no se encuentra instalado. Revisar strongSwan y la conectividad con la sede remota."
+
+      - alert: IPsecXFRMCaido
+        expr: ipsec_xfrm_installed{job="nodos",instance="firewall01.sjo",tunnel="sjo-car"} == 0
+        for: 1m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Asociaciones IPsec SJO-CAR no instaladas"
+          description: "Falta al menos una asociacion ESP del tunel manual SJO-CAR. Revisar las asociaciones y politicas con ip xfrm."
+
+      - alert: IPsecCARSinConectividad
+        expr: ipsec_xfrm_reachable{job="nodos",instance="firewall01.sjo",tunnel="sjo-car"} == 0
+        for: 2m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Sin conectividad entre SJO y CAR"
+          description: "El firewall SJO no logra alcanzar 10.4.32.1 desde 10.4.0.1. Revisar IPsec, rutas, firewall y disponibilidad del destino."
+
+      - alert: InterfazRedInactiva
+        expr: node_network_up{job="nodos",device!="lo"} == 0
+        for: 2m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Interfaz {{ $labels.device }} inactiva en {{ $labels.instance }}"
+          description: "La interfaz {{ $labels.device }} del servidor {{ $labels.instance }} de la sede {{ $labels.sede }} permanece inactiva durante más de 2 minutos."
+
+      - alert: ServicioTCPNoDisponible
+        expr: probe_success{job="servicios_tcp_adicionales"} == 0
+        for: 1m
+        labels:
+          severity: critica
+        annotations:
+          summary: "Puerto TCP no disponible: {{ $labels.instance }}"
+          description: "El puerto TCP {{ $labels.instance }} no responde desde Prometheus. Revisar el servicio y la conectividad."
+
+      - alert: DNSRespuestaLenta
+        expr: probe_duration_seconds{job="servicios_dns"} > 1
+        for: 2m
+        labels:
+          severity: advertencia
+        annotations:
+          summary: "DNS con respuesta lenta: {{ $labels.instance }}"
+          description: "La consulta DNS contra {{ $labels.instance }} tarda más de 1 segundo."
+
+      - alert: LogsCentralizados80Porciento
+        expr: (remote_logs_used_bytes / remote_logs_limit_bytes) * 100 > 80
+        for: 5m
+        labels:
+          severity: advertencia
+          sede: SJO
+        annotations:
+          summary: "Almacenamiento de logs centralizados superior al 80%"
+          description: "Los registros centralizados superaron el 80% del límite operativo de 1 GiB. Acción: revisar el crecimiento de los logs, verificar la rotación y ampliar el almacenamiento si es necesario."

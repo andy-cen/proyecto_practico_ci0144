@@ -1,0 +1,120 @@
+table inet filter {
+	set lan_ifaces {
+		type ifname
+		elements = { "ens36.100",
+			     "ens36.101",
+			     "ens36.102",
+			     "ens36.103",
+			     "ens36.104",
+			     "ens36.105",
+			     "ens36.106",
+			     "ens36.107",
+			     "ens36.108" }
+	}
+
+	set management_ifaces {
+		type ifname
+		elements = { "ens36.100" }
+	}
+
+	set internal_server_ifaces {
+		type ifname
+		elements = { "ens36.101",
+			     "ens36.102",
+			     "ens36.104" }
+	}
+
+	set dmz_ifaces {
+		type ifname
+		elements = { "ens36.103" }
+	}
+
+	set client_ifaces {
+		type ifname
+		elements = { "ens36.105",
+			     "ens36.106",
+			     "ens36.107",
+			     "ens36.108" }
+	}
+
+	set wan_ssh_allow {
+		type ipv4_addr
+		flags interval
+		elements = { 172.17.0.112 }
+	}
+
+	chain input {
+		type filter hook input priority filter; policy drop;
+		ip saddr { 10.4.5.0-10.4.8.255, 10.4.21.0-10.4.24.255, 10.4.37.0-10.4.40.255 } ip daddr 10.4.0.0/24 counter packets 3 bytes 252 drop
+		iif "lo" accept
+		ct state established,related accept
+		ct state invalid drop
+		iifname @client_ifaces ip daddr 10.4.0.0/24 counter packets 10 bytes 840 drop
+		iifname "ens37" icmp type { destination-unreachable, echo-request, time-exceeded } accept
+		iifname @lan_ifaces icmp type { destination-unreachable, echo-request, time-exceeded } accept
+		ip protocol icmp icmp type echo-reply accept
+		iifname "ens33" ip saddr { 172.24.133.80, 172.24.133.84 } udp dport 123 accept
+		iifname @lan_ifaces udp dport 123 accept
+		iifname "ens33" ip saddr 172.24.133.80 udp dport { 500, 4500 } accept
+		iifname "ens33" ip saddr 172.24.133.80 ip protocol esp accept
+		iifname "ens33" ip saddr 10.4.32.0/20 ip daddr 10.4.0.0/20 icmp type echo-request accept
+		iifname "ens33" ip saddr 10.4.16.0/20 icmp type { echo-reply, destination-unreachable, echo-request, time-exceeded } accept
+		iifname "ens36.100" tcp dport 22 ct state new accept
+		iifname "ens37" tcp dport 22 ct state new accept
+		iifname "ens33" ip saddr @wan_ssh_allow tcp dport 22 ct state new limit rate 4/minute burst 4 packets accept
+		iifname "ens33" ip saddr 172.24.133.84 ip protocol esp accept
+		iifname "ens36.101" ip saddr 10.4.1.50 ip daddr 10.4.1.1 tcp dport 9100 ct state new accept
+		iifname "ens36.105" udp sport 68 udp dport 67 accept
+		iifname "ens33" ip saddr 10.4.17.10 udp sport 67 udp dport 67 accept
+		limit rate 5/minute burst 5 packets log prefix "INPUT-DROP: " level info
+		drop
+	}
+
+	chain forward {
+		type filter hook forward priority filter; policy drop;
+		ip saddr { 10.4.5.0-10.4.8.255, 10.4.21.0-10.4.24.255, 10.4.37.0-10.4.40.255 } ip daddr 10.4.0.0/24 counter packets 0 bytes 0 drop
+		iifname "ens36.105" oifname "ens36.101" ip saddr 10.4.5.0/24 ip daddr 10.4.1.20 tcp dport 53 ct state new accept
+		iifname "ens36.105" oifname "ens36.101" ip saddr 10.4.5.0/24 ip daddr 10.4.1.20 udp dport 53 ct state new accept
+		ct state established,related accept
+		ct state invalid drop
+		iifname @client_ifaces oifname "ens36.101" ip daddr 10.4.1.21 udp dport 53 accept
+		iifname @client_ifaces oifname "ens36.101" ip daddr 10.4.1.21 tcp dport 53 accept
+		iifname @client_ifaces oifname @management_ifaces counter packets 0 bytes 0 drop
+		iifname @management_ifaces oifname @internal_server_ifaces counter packets 0 bytes 0 accept
+		iifname @management_ifaces oifname @dmz_ifaces counter packets 0 bytes 0 accept
+		iifname @management_ifaces oifname @client_ifaces counter packets 0 bytes 0 accept
+		iifname @lan_ifaces oifname "ens33" accept
+		iifname @lan_ifaces oifname "ens33" ip daddr 10.4.16.0/20 accept
+		iifname "ens33" oifname @lan_ifaces ip saddr 10.4.16.0/20 accept
+		iifname @lan_ifaces oifname "ens33" ip daddr 10.4.32.0/20 accept
+		iifname "ens33" oifname @lan_ifaces ip saddr 10.4.32.0/20 accept
+		limit rate 5/minute burst 5 packets log prefix "FORWARD-DROP: " level info
+		drop
+	}
+
+	chain output {
+		type filter hook output priority filter; policy drop;
+		oif "lo" accept
+		oifname "ens33" ip daddr 172.24.133.80 udp dport { 500, 4500 } accept
+		oifname "ens33" ip daddr 172.24.133.80 ip protocol esp accept
+		ct state established,related accept
+		udp dport 53 accept
+		tcp dport 53 accept
+		udp dport 123 accept
+		tcp dport { 80, 443 } accept
+		tcp dport 22 accept
+		icmp type { echo-reply, destination-unreachable, echo-request, time-exceeded } accept
+		oifname "ens33" ip daddr 172.24.133.84 ip protocol esp accept
+		oifname "ens36.101" ip daddr 10.4.1.10 udp dport 67 accept
+		oifname "ens33" ip daddr 10.4.17.10 udp dport 67 accept
+		ip daddr 10.4.1.50 tcp dport 514 accept
+		limit rate 5/minute burst 5 packets log prefix "OUTPUT-DROP: " level info
+		drop
+	}
+}
+table ip nat {
+	chain postrouting {
+		type nat hook postrouting priority srcnat; policy accept;
+		ip saddr 10.4.0.0/20 ip daddr != { 10.4.16.0-10.4.47.255 } oifname "ens33" snat to 172.24.133.76
+	}
+}

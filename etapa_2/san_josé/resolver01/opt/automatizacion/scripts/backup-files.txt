@@ -1,0 +1,17 @@
+/etc/named.conf
+/etc/named.rfc1912.zones
+/etc/named.root.key
+/etc/NetworkManager/system-connections/
+/etc/chrony.conf
+/etc/ssh/sshd_config
+/etc/ssh/sshd_config.d/
+/etc/rsyslog.conf
+/etc/rsyslog.d/90-central-logging.conf
+/etc/sysctl.conf
+/etc/systemd/system/node_exporter.service
+/usr/local/bin/node_exporter
+/opt/automatizacion/scripts/backup-config.sh
+/opt/automatizacion/scripts/backup-files.txt
+/etc/backup-config/backup.conf
+/etc/systemd/system/backup-config.service
+/etc/systemd/system/backup-config.timer

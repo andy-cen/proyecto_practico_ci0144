@@ -1,0 +1,7 @@
+[Unit]
+Description=Generar metricas IPsec para Prometheus
+After=strongswan.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ipsec_metrics.py

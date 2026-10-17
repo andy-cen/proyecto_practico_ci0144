@@ -1,0 +1,12 @@
+[Unit]
+Description=CI-0144 - Despliegue automatico de zona DNS
+Wants=network-online.target
+After=network-online.target named.service
+Requires=named.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/deploy_zone_file.sh
+StandardOutput=journal
+StandardError=journal

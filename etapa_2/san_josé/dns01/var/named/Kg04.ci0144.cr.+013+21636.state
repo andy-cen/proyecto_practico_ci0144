@@ -1,0 +1,21 @@
+; This is the state of key 21636, for g04.ci0144.cr.
+Algorithm: 13
+Length: 256
+Lifetime: 15552000
+KSK: yes
+ZSK: yes
+Generated: 20261007002852 (Tue Oct  6 20:28:52 2026)
+Published: 20261007002852 (Tue Oct  6 20:28:52 2026)
+Active: 20261007002852 (Tue Oct  6 20:28:52 2026)
+Retired: 20270405002852 (Sun Apr  4 20:28:52 2027)
+Removed: 20270415013352 (Wed Apr 14 21:33:52 2027)
+PublishCDS: 20261008013352 (Wed Oct  7 21:33:52 2026)
+DNSKEYChange: 20261007023352 (Tue Oct  6 22:33:52 2026)
+ZRRSIGChange: 20261008013352 (Wed Oct  7 21:33:52 2026)
+KRRSIGChange: 20261007023352 (Tue Oct  6 22:33:52 2026)
+DSChange: 20261008013352 (Wed Oct  7 21:33:52 2026)
+DNSKEYState: omnipresent
+ZRRSIGState: omnipresent
+KRRSIGState: omnipresent
+DSState: rumoured
+GoalState: omnipresent

@@ -1,0 +1,6 @@
+[Unit]
+Description=Actualizar metricas de almacenamiento de logs centralizados
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/remote_logs_metrics.sh

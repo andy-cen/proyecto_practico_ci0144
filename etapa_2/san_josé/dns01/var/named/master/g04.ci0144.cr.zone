@@ -1,0 +1,65 @@
+$ORIGIN .
+$TTL 3600	; 1 hour
+g04.ci0144.cr		IN SOA	ns1.g04.ci0144.cr. hostmaster.g04.ci0144.cr. (
+				2026143941 ; serial
+				3600       ; refresh (1 hour)
+				900        ; retry (15 minutes)
+				1209600    ; expire (2 weeks)
+				300        ; minimum (5 minutes)
+				)
+			NS	ns1.g04.ci0144.cr.
+			NS	ns2.g04.ci0144.cr.
+			MX	10 mail.g04.ci0144.cr.
+			TXT	"v=spf1 mx -all"
+$ORIGIN g04.ci0144.cr.
+_dmarc			TXT	"v=DMARC1; p=quarantine; rua=mailto:dmarc@g04.ci0144.cr"
+$ORIGIN car.dhcp.g04.ci0144.cr.
+$TTL 9600	; 2 hours 40 minutes
+cliente01		A	10.4.37.50
+			DHCID	( AAEBq3azP4zs0j104v1MOcspSr+Rjq2Jw8S7o0y5wC2j
+				3KI= ) ; 1 1 32
+cliente02		A	10.4.37.51
+			DHCID	( AAEBAiFz6tspLDaKkCi+UoZd/94ncrRrsukVbe9O7bg7
+				mwI= ) ; 1 1 32
+cliente03		A	10.4.37.52
+			DHCID	( AAEBY4h50WxuBSr/mYEVL81lGUqB8hFTioHovPJw+8nL
+				kRk= ) ; 1 1 32
+cliente04		A	10.4.37.53
+			DHCID	( AAEB703HA3llKHg0awTahDTudJBuUgN2ZApTvMTZVdLR
+				2Ls= ) ; 1 1 32
+$ORIGIN lim.dhcp.g04.ci0144.cr.
+cliente01		A	10.4.21.50
+			DHCID	( AAEBJvMBJSZ/9VVadafOGID4PrkwBYCqg3U45lRpMZvX
+				hzk= ) ; 1 1 32
+cliente04		A	10.4.21.53
+			DHCID	( AAEBdty0UD2XX4dlxb7+B6Hy4cx5pC57IkYqxZBa3AG+
+				PWU= ) ; 1 1 32
+$ORIGIN dhcp.g04.ci0144.cr.
+myhost-10-4-21-100	A	10.4.21.100
+			DHCID	( AAEBvLHjolDQLlr7LxVM1GwCJeED62XQoW3h1G0r0usw
+				Miw= ) ; 1 1 32
+$ORIGIN sjo.dhcp.g04.ci0144.cr.
+cliente01		A	10.4.5.50
+			DHCID	( AAEBt0Mr49tRDlcMMsuWTxMkWUaiGiNuUdkqK81ULMqv
+				mgg= ) ; 1 1 32
+cliente02		A	10.4.5.51
+			DHCID	( AAEBWTTmppMg76fyjr9xpMkRRxdgluWKWmPAsvZtsAVQ
+				7EM= ) ; 1 1 32
+cliente03		A	10.4.5.52
+			DHCID	( AAEBUVIHl3YrOuLXjzj7TcsuiQ59VtVwJGMoeeDBZ2+W
+				MkY= ) ; 1 1 32
+cliente04		A	10.4.5.53
+			DHCID	( AAEBZE+uX2t4USusNsfx5JIQS0jOVKHv/2v/9YqgIKJb
+				ySw= ) ; 1 1 32
+$ORIGIN lim.int.g04.ci0144.cr.
+$TTL 3600	; 1 hour
+dhcp01			A	10.4.17.10
+dns01			A	10.4.19.20
+$ORIGIN sjo.int.g04.ci0144.cr.
+dhcp01			A	10.4.1.10
+dns01			A	10.4.1.20
+monitoreo01		A	10.4.1.50
+resolver01		A	10.4.1.21
+$ORIGIN g04.ci0144.cr.
+ns1			A	10.4.19.20
+ns2			A	10.4.35.20

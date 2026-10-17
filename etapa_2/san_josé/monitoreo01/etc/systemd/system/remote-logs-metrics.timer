@@ -1,0 +1,11 @@
+[Unit]
+Description=Actualizar metricas de logs centralizados cada minuto
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+AccuracySec=10s
+Unit=remote-logs-metrics.service
+
+[Install]
+WantedBy=timers.target

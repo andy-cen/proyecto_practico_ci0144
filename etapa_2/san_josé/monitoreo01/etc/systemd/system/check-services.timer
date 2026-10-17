@@ -1,0 +1,11 @@
+[Unit]
+Description=CI-0144 - Verificacion periodica de servicios
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+AccuracySec=10s
+Unit=check-services.service
+
+[Install]
+WantedBy=timers.target

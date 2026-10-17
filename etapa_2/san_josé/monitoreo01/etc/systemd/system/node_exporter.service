@@ -1,0 +1,17 @@
+[Unit]
+Description=Prometheus node_exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+ExecStart=/usr/local/bin/node_exporter \
+  --web.listen-address=127.0.0.1:9100 \
+  --collector.systemd \
+  --collector.systemd.unit-include=(sshd|chronyd|httpd)[.]service \
+  --collector.textfile.directory=/var/lib/node_exporter/textfile_collector
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

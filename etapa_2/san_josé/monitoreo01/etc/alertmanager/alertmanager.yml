@@ -1,0 +1,29 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'telegram-g04'
+  group_by: ['alertname', 'severity', 'sede']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: 'telegram-g04'
+    telegram_configs:
+      - bot_token_file: /etc/alertmanager/telegram_token
+        chat_id: 1098241998
+        send_resolved: true
+        parse_mode: ''
+        message: |
+          ALERTA DE INFRAESTRUCTURA - G04
+
+          Estado: {{ .Status }}
+
+          {{ range .Alerts }}
+          Alerta: {{ .Labels.alertname }}
+          Severidad: {{ .Labels.severity }}
+          Servidor: {{ .Labels.instance }}
+          Sede: {{ .Labels.sede }}
+          Descripcion: {{ .Annotations.description }}
+          {{ end }}

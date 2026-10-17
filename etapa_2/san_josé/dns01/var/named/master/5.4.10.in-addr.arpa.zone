@@ -1,0 +1,25 @@
+$ORIGIN .
+$TTL 3600	; 1 hour
+5.4.10.in-addr.arpa	IN SOA	ns1.g04.ci0144.cr. hostmaster.g04.ci0144.cr. (
+				2026100705 ; serial
+				3600       ; refresh (1 hour)
+				900        ; retry (15 minutes)
+				1209600    ; expire (2 weeks)
+				300        ; minimum (5 minutes)
+				)
+			NS	ns1.g04.ci0144.cr.
+			NS	ns2.g04.ci0144.cr.
+$ORIGIN 5.4.10.in-addr.arpa.
+$TTL 9600	; 2 hours 40 minutes
+50			PTR	cliente01.sjo.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBt0Mr49tRDlcMMsuWTxMkWUaiGiNuUdkqK81ULMqv
+				mgg= ) ; 1 1 32
+51			PTR	cliente02.sjo.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBWTTmppMg76fyjr9xpMkRRxdgluWKWmPAsvZtsAVQ
+				7EM= ) ; 1 1 32
+52			PTR	cliente03.sjo.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBUVIHl3YrOuLXjzj7TcsuiQ59VtVwJGMoeeDBZ2+W
+				MkY= ) ; 1 1 32
+53			PTR	cliente04.sjo.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBZE+uX2t4USusNsfx5JIQS0jOVKHv/2v/9YqgIKJb
+				ySw= ) ; 1 1 32

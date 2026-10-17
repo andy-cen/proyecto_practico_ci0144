@@ -1,0 +1,25 @@
+$ORIGIN .
+$TTL 3600	; 1 hour
+37.4.10.in-addr.arpa	IN SOA	ns1.g04.ci0144.cr. hostmaster.g04.ci0144.cr. (
+				2026129853 ; serial
+				3600       ; refresh (1 hour)
+				900        ; retry (15 minutes)
+				1209600    ; expire (2 weeks)
+				300        ; minimum (5 minutes)
+				)
+			NS	ns1.g04.ci0144.cr.
+			NS	ns2.g04.ci0144.cr.
+$ORIGIN 37.4.10.in-addr.arpa.
+$TTL 9600	; 2 hours 40 minutes
+50			PTR	cliente01.car.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBq3azP4zs0j104v1MOcspSr+Rjq2Jw8S7o0y5wC2j
+				3KI= ) ; 1 1 32
+51			PTR	cliente02.car.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBAiFz6tspLDaKkCi+UoZd/94ncrRrsukVbe9O7bg7
+				mwI= ) ; 1 1 32
+52			PTR	cliente03.car.dhcp.g04.ci0144.cr.
+			DHCID	( AAEBY4h50WxuBSr/mYEVL81lGUqB8hFTioHovPJw+8nL
+				kRk= ) ; 1 1 32
+53			PTR	cliente04.car.dhcp.g04.ci0144.cr.
+			DHCID	( AAEB703HA3llKHg0awTahDTudJBuUgN2ZApTvMTZVdLR
+				2Ls= ) ; 1 1 32

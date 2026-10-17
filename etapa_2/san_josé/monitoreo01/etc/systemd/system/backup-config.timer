@@ -1,0 +1,10 @@
+[Unit]
+Description=Respaldo diario de monitoreo01.sjo a las 02:00
+
+[Timer]
+OnCalendar=*-*-* 02:00:00 America/Costa_Rica
+Persistent=true
+Unit=backup-config.service
+
+[Install]
+WantedBy=timers.target
