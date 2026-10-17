@@ -1,0 +1,17 @@
+[connection]
+id=ens35
+uuid=1c214f30-7925-3f18-8f48-646f7d40d6f7
+type=ethernet
+autoconnect-priority=-999
+interface-name=ens35
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]

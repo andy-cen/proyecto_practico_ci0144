@@ -1,0 +1,17 @@
+[connection]
+id=ens33
+uuid=4d740db6-c1e3-3b0d-a703-ba36bcb1c900
+type=ethernet
+autoconnect-priority=-999
+interface-name=ens33
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]

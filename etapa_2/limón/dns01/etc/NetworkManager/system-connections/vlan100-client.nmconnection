@@ -1,0 +1,17 @@
+[connection]
+id=vlan105-client
+uuid=c4d8f078-2de1-418b-8e16-13b10627a20d
+type=ethernet
+interface-name=ens33
+timestamp=1791405323
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=disabled
+
+[proxy]

@@ -1,0 +1,11 @@
+[Unit]
+Description=Actualizar metricas DHCP Kea cada minuto
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+AccuracySec=5s
+Unit=kea-pool-metrics.service
+
+[Install]
+WantedBy=timers.target

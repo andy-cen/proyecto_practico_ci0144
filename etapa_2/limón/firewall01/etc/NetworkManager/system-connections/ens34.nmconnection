@@ -1,0 +1,17 @@
+[connection]
+id=ens34
+uuid=3e994870-8b95-31ee-b908-bf539c95af81
+type=ethernet
+autoconnect-priority=-999
+interface-name=ens34
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]
