@@ -117,9 +117,9 @@ Sede con servicios DHCP independientes y participación en la arquitectura DNS a
 
 | Servidor | Función |
 |---|---|
-| firewall01 | Seguridad perimetral, segmentación, enrutamiento, IPsec y DHCP Relay |
-| dhcp01 | Servicio DHCP local, ámbitos y reservas de direcciones |
-| dns01 | DNS secundario autoritativo y transferencias de zona autenticadas |
+| [firewall01](./etapa_2/cartago/firewall01/) | Seguridad perimetral, segmentación, enrutamiento, IPsec y DHCP Relay |
+| [dhcp01](./etapa_2/cartago/dhcp01/) | Servicio DHCP local, ámbitos y reservas de direcciones |
+| [dns01](./etapa_2/cartago/dns01/) | DNS secundario autoritativo y transferencias de zona autenticadas |
 
 **Nota:** las configuraciones de Cartago correspondientes a la Etapa 2 se encuentran pendientes de incorporar al repositorio.
 
