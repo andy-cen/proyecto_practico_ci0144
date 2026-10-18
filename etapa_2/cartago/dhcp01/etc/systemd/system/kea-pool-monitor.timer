@@ -1,0 +1,11 @@
+[Unit]
+Description=Ejecutar monitoreo de pools DHCP cada minuto
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+AccuracySec=1s
+Unit=kea-pool-monitor.service
+
+[Install]
+WantedBy=timers.target

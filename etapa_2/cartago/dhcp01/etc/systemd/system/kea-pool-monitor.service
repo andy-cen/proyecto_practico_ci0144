@@ -1,0 +1,8 @@
+[Unit]
+Description=Monitoreo de utilizacion de pools DHCP Kea
+After=kea-dhcp4.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/bin/kea-pool-monitor.py
+User=root
