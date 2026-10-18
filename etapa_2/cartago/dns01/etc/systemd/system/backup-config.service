@@ -1,0 +1,9 @@
+[Unit]
+Description=Respaldo de configuraciones hacia otra cartago
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/opt/automatizacion/scripts/backup-config.sh
