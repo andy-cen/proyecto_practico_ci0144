@@ -174,6 +174,9 @@ proyecto_practico_ci0144/
 │
 └── etapa_2/
     ├── cartago/
+    │   ├── dhcp01/
+    │   ├── dns01/
+    │   └── firewall01/
     ├── figuras/
     ├── limón/
     │   ├── dhcp01/
