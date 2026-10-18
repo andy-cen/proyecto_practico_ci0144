@@ -1,0 +1,8 @@
+[Unit]
+Description=Exportar metricas IPsec para Prometheus
+After=strongswan.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/bin/python3 /usr/local/bin/ipsec_metrics.py

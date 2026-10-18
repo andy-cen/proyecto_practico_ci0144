@@ -1,0 +1,16 @@
+[connection]
+id=lan-trunk
+uuid=9d4fb617-cfe2-49f1-b02e-8df8dcdda60c
+type=ethernet
+interface-name=ens36
+
+[ethernet]
+
+[ipv4]
+method=disabled
+
+[ipv6]
+addr-gen-mode=default
+method=disabled
+
+[proxy]

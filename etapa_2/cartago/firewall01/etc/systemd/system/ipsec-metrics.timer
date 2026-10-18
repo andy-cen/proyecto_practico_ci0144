@@ -1,0 +1,11 @@
+[Unit]
+Description=Actualizar metricas IPsec cada minuto
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=1min
+AccuracySec=10s
+Unit=ipsec-metrics.service
+
+[Install]
+WantedBy=timers.target
